@@ -12,9 +12,7 @@ function BookSearch() {
     const [userInput,setUserInput] = useState('')
     
     useEffect(()=>{
-         
             getBookDetails()
-        
     },[userInput])
 
     const navgigate = useNavigate()
@@ -27,9 +25,6 @@ function BookSearch() {
     // function to get bookDetails from API
     const getBookDetails = async() =>{
         try{
-            if(!userInput){
-                return setWarning('Please Enter the Book Name to Search')
-            }
             setWarning('')
             const response = await fetch(`https://openlibrary.org/search.json?q=${userInput}&limit=10&page=1`);
             const data = await response.json();
@@ -40,23 +35,26 @@ function BookSearch() {
             setBookDetails(data.docs)
         }catch(error){
             console.log(error);
-            return setWarning('server Error');
+            return setWarning('Failed to Fetch Please Enter Valid Book Name');
         }
     }
   return (
-    <div className='m-3'>
+    <div className=''>
 
         {/* My Bookshelf Button container */}
         <div className='flex items-center 
-                justify-end mr-6 mt-4'>
-            <Button name='My BookShelf'
-                event = {handleNavigate}
+                justify-end p-4 bg-gray-50
+                flex items-center'>
+            <div>
+                <Button name='My BookShelf'
+                    event = {handleNavigate}
               /> 
+            </div>
         </div>
 
         {/* Search Bar container */}
         <div className='flex items center md:justify-between
-                m-4 flex-wrap'>
+                m-4 mt-8 flex-wrap'>
             <input 
                 type="text" name="bookname"
                 className='border-none outline-none bg-gray-200
@@ -68,11 +66,10 @@ function BookSearch() {
         </div>
         
         {/* Warining Component */}
-
-        {warning && !userInput ?
+        {warning && 
             <div>
             <Warning message={warning}/>
-        </div> : setWarning('') }
+        </div> }
         
         {/* Card component Container 
             Note : The Card Component will render only if we get data from API*/}
@@ -88,7 +85,6 @@ function BookSearch() {
                 ))}
             </div>
        : '' }
-    <button onClick={getBookDetails}>Click</button>
     </div>
   )
 }
